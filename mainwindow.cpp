@@ -71,7 +71,6 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_addEvent_clicked()
 {
-
     //вызов диалога текстового поля
     //запись
     //
@@ -98,7 +97,6 @@ void MainWindow::on_addEvent_clicked()
         data.setData(ui->calendarWidget->selectedDate(), text);
         tasks.push_back(data);
         ui->listWidget->addItem(text);
-
         //ui->listWidget->addItem(QString::fromUtf8("%1").arg(text));
     }
 

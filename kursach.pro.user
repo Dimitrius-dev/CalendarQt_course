@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.14.0, 2021-10-03T02:39:39. -->
+<!-- Written by QtCreator 4.14.0, 2021-10-03T17:44:26. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -294,8 +294,9 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:P:/files/c++/qt/kursach/kursach/kursach.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">P:/files/c++/qt/kursach/kursach/kursach.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">kursach2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:P:/files/c++/git/CalendarQt_course/kursach.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">P:/files/c++/git/CalendarQt_course/kursach.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
