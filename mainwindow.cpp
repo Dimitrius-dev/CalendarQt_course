@@ -9,10 +9,18 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Ежедневник");
+    //date = ui->calendarWidget->selectedDate();
     on_calendarWidget_clicked();
 
     colorSelected.setBackground(Qt::green);
     colorUnSelected.setBackground(Qt::white);
+    colorHighlight.setBackground(Qt::red);
+
+    ui->spinBox->setMaximum(0);
+
+    nameOfFile = "Безымянный";
+    ui->fileName->setText(nameOfFile);
 }
 
 MainWindow::~MainWindow()
@@ -21,35 +29,150 @@ MainWindow::~MainWindow()
 }
 
 
-
 void MainWindow::on_calendarWidget_clicked()
 {
-    data = ui->calendarWidget->selectedDate();
-
-    //ui->calendarWidget->set
-    //QCalendarWidget::paintCell(painter, rect, data);
-    //ui->verticalScrollBar->valueChanged(50);
-}
-
-void MainWindow::on_verticalScrollBar_actionTriggered()
-{
-    qDebug()<<"mo";
+    date = ui->calendarWidget->selectedDate();
 }
 
 
 void MainWindow::on_open_triggered()
 {
+    if(change)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, QString::fromUtf8("Внимание"),
+                              QString::fromUtf8("Сохранить файл " + nameOfFile.toUtf8() + " ?" ),
+                              QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (reply == QMessageBox::Yes)
+            on_save_triggered();
+        else if (reply == QMessageBox::No)
+        {
 
+        }
+    }
+
+    change = false;
+
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                QString::fromUtf8("Открыть файл"),
+                                QDir::currentPath(),
+                                "Documents (*.txt);;All files (*.*)");
+
+    if(fileName.isEmpty()){
+        return;
+    }
+
+    clearAll();
+
+    //qDebug()<<fileName;
+    nameOfFile = fileName.right(fileName.length() - fileName.lastIndexOf("/") - 1);
+    ui->fileName->setText(nameOfFile);
+
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning("Cannot open file for reading"); // если файл не найден, то выводим предупреждение и завершаем выполнение программы
+        return;
+    }
+
+    QTextStream in(&file);
+
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        tasks.append(taskitem(line));
+        //out << line << endl;
+    }
+    file.close();
+
+    for(int i = 0;i < tasks.size();i++)//подсвечиваем даты
+    {
+        ui->calendarWidget->setDateTextFormat(tasks[i].getDate(),colorSelected);
+    }
+    printTasks(true);
 }
 
 void MainWindow::on_save_triggered()
 {
+    change = false;
 
+    QTextStream out(stdout);
+    QFile file(nameOfFile);
+
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream out(&file); // поток записываемых данных направляем в файл
+
+        for(int i = 0;i<tasks.size(); i++)
+        {
+            out<<tasks[i].getItemString()<<Qt::endl;
+        }
+
+        ui->fileName->setText(nameOfFile);
+
+    } else {
+        qWarning("Could not open file");
+      }
+      file.close();
 }
 
 void MainWindow::on_create_triggered()
 {
+    if(change)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, QString::fromUtf8("Внимание"),
+                              QString::fromUtf8("Сохранить файл " + nameOfFile.toUtf8() + " ?" ),
+                              QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (reply == QMessageBox::Yes)
+            on_saveHow_triggered();//нюанс с тем, если файл до этого был уже сохранен, то все равно ему предложат новое место для хранения
+        else if (reply == QMessageBox::No)
+        {
 
+        }
+    }
+
+    change = false;
+
+    on_saveHow_triggered();
+
+    clearAll();
+
+}
+
+void MainWindow::sort()
+{
+    for(int i = tasks.size() - 1;i >= 0; i--)
+    {
+        for(int j = tasks.size() - 1;j >= 0; j--)
+        {
+            if(tasks[j].getDate() < tasks[i].getDate())
+            {
+                tasks.swapItemsAt(i,j);
+            }
+        }
+    }
+}
+
+void MainWindow::printTasks(bool ignore){
+
+    if((!change)&&(!ignore))
+    {
+        change = true;
+        ui->fileName->setText("*" + nameOfFile);
+    }
+
+
+    ui->spinBox->setMaximum(tasks.size() - 1);
+    ui->spinBox->setValue(0);
+
+    sort();
+
+    ui->textBrowser->clear();
+    for(int i = 0;i<tasks.size();i++)
+    {
+        ui->textBrowser->append(tasks[i].getItemString());
+    }
 }
 
 void MainWindow::on_info_triggered()
@@ -58,60 +181,88 @@ void MainWindow::on_info_triggered()
     //вставить гиперссылку
 }
 
-void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
-{
-    for(int i{};i < tasks.size();i++)
-    {
-        if(item->text() == tasks[i].getText()){
-            ui->calendarWidget->setSelectedDate(tasks[i].getData());
-            break;
-        }
-    }
-}
 
 void MainWindow::on_addEvent_clicked()
 {
-    //вызов диалога текстового поля
-    //запись
-    //
-    /*
-    for(int i{};i < tasks.size();i++)
-    {
-        if(ui->calendarWidget->selectedDate().getDate() == tasks[i].getText()){
-            ui->calendarWidget->setSelectedDate(tasks[i].getData());
-            return;
-        }
-    }
-    */
-
     bool ok;
     QString text = QInputDialog::getText(this,
                                  QString::fromUtf8("Введите задачу"),
                                  QString::fromUtf8("Ваш текст:"),
                                  QLineEdit::Normal,
-                                 QDir::home().dirName(), &ok);
-    if (ok && !text.isEmpty()){
+                                 "", &ok);//QDir::home().dirName()
+    if (ok && !text.isEmpty())
+    {
         ui->calendarWidget->setDateTextFormat(ui->calendarWidget->selectedDate(),colorSelected);
-
-        taskData data;
-        data.setData(ui->calendarWidget->selectedDate(), text);
-        tasks.push_back(data);
-        ui->listWidget->addItem(text);
-        //ui->listWidget->addItem(QString::fromUtf8("%1").arg(text));
+        tasks.append(taskitem(text, ui->calendarWidget->selectedDate()));
+        printTasks(false);
     }
-
-    /*
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                QString::fromUtf8("Открыть файл"),
-                                QDir::currentPath(),
-                                "Images (*.txt);;All files (*.*)");
-    qDebug()<<fileName;
-    */
-
-    //ui->listWidget->addItem();
 }
 
 void MainWindow::on_deleteEvent_clicked()
 {
-    ui->calendarWidget->setDateTextFormat(ui->calendarWidget->selectedDate(),colorUnSelected);
+
+    for (iterList = tasks.begin(); iterList != tasks.end(); ++iterList)
+    {
+        if(iterList->getDate() == ui->calendarWidget->selectedDate())
+        {
+            ui->calendarWidget->setDateTextFormat(ui->calendarWidget->selectedDate(),colorUnSelected);
+            tasks.erase(iterList);
+
+            printTasks(false);
+
+            break;
+        }
+    }
+
+}
+
+void MainWindow::on_spinBox_textChanged()
+{
+    ui->calendarWidget->setSelectedDate(tasks[ui->spinBox->value()].getDate());
+}
+
+void MainWindow::on_saveHow_triggered()
+{
+
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                QString::fromUtf8("Сохранить файл"),
+                                QDir::currentPath(),
+                                "Documents (*.txt);;All files (*.*)");
+    if(fileName.isEmpty())
+    {
+        return;
+    }
+
+    nameOfFile = fileName.right(fileName.length() - fileName.lastIndexOf("/") - 1);
+    ui->fileName->setText(nameOfFile);
+    change = false;
+
+    QTextStream out(stdout);
+
+    QFile file(nameOfFile);
+
+    // Открываем файл в режиме "Только для записи"
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream out(&file); // поток записываемых данных направляем в файл
+
+        for(int i = 0;i<tasks.size(); i++)
+        {
+            out<<tasks[i].getItemString()<<Qt::endl;
+        }
+
+    } else {
+        qWarning("Could not open file");
+      }
+      file.close();
+}
+
+
+void MainWindow::clearAll()
+{
+    for(int i = 0;i < tasks.size();i++)//подсвечиваем даты
+    {
+        ui->calendarWidget->setDateTextFormat(tasks[i].getDate(),colorUnSelected);
+    }
+    ui->textBrowser->clear();
+    tasks.clear();
 }

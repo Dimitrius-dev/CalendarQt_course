@@ -2,11 +2,9 @@
 #define MAINWINDOW_H
 
 #include "ui_mainwindow.h"
-
+#include "taskitem.h"
 #include "QTextCharFormat"
 #include <QMainWindow>
-#include "taskdata.h"
-#include "instdata.h"
 #include "QFileDialog"
 #include "QMessageBox"
 #include "QInputDialog"
@@ -26,11 +24,11 @@ public:
 private slots:
     void on_calendarWidget_clicked();
 
-    void on_verticalScrollBar_actionTriggered();
+    void printTasks(bool ignore);
 
-    void on_pushButton_clicked();
+    void sort();
 
-    void printTask();
+    void clearAll();
 
     void on_open_triggered();
 
@@ -40,27 +38,32 @@ private slots:
 
     void on_info_triggered();
 
-    void on_listWidget_itemClicked(QListWidgetItem *item);
-
     void on_addEvent_clicked();
 
     void on_deleteEvent_clicked();
+
+    void on_spinBox_textChanged();
+
+    void on_saveHow_triggered();
 
 private:
     Ui::MainWindow *ui;
     //QStringList list;
 
-    QList<taskData> tasks;
-    QDate data;
+    QDate date;
 
     int pages = 0;
     QString name = "";
     QString today = "";
     bool saved = true;
 
+    QString nameOfFile = "";
 
-    QTextCharFormat colorSelected, colorUnSelected;
+    QTextCharFormat colorSelected, colorUnSelected, colorHighlight;
 
+    QList<taskitem>::iterator iterList;
+    QList<taskitem> tasks;
 
+    bool change = false;
 };
 #endif // MAINWINDOW_H

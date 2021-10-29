@@ -11,11 +11,11 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    taskdata.cpp
+    taskitem.cpp
 
 HEADERS += \
     mainwindow.h \
-    taskdata.h
+    taskitem.h
 
 FORMS += \
     mainwindow.ui
