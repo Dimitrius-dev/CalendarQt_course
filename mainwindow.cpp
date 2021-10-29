@@ -162,17 +162,21 @@ void MainWindow::printTasks(bool ignore){
         ui->fileName->setText("*" + nameOfFile);
     }
 
-
-    ui->spinBox->setMaximum(tasks.size() - 1);
+    int size = tasks.size();
+    ui->spinBox->setMaximum( (size == 0) ? size : size - 1 );
     ui->spinBox->setValue(0);
+
+    ui->textBrowser->clear();
+    //if(tasks ==  nullptr){}
 
     sort();
 
-    ui->textBrowser->clear();
+
     for(int i = 0;i<tasks.size();i++)
     {
         ui->textBrowser->append(tasks[i].getItemString());
     }
+
 }
 
 void MainWindow::on_info_triggered()
@@ -201,7 +205,7 @@ void MainWindow::on_addEvent_clicked()
 void MainWindow::on_deleteEvent_clicked()
 {
 
-    for (iterList = tasks.begin(); iterList != tasks.end(); ++iterList)
+    for (iterList = tasks.begin(); iterList != tasks.end(); iterList++)
     {
         if(iterList->getDate() == ui->calendarWidget->selectedDate())
         {

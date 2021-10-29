@@ -48,7 +48,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    //QStringList list;
 
     QDate date;
 
