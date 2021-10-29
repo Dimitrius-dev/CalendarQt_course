@@ -177,7 +177,7 @@ void MainWindow::printTasks(bool ignore){
 
 void MainWindow::on_info_triggered()
 {
-    QMessageBox::information(this, "Program by Dmitrii B.", "VERSION 1.0\nThis program is designed to create your own diary\nSee, more on <style>...</style>https://github.com/Dimitriusprog");
+    QMessageBox::information(this, "info", "VERSION 0.0.6\nThis program is designed to create\nyour own diary\nSee more on https://github.com/Dimitriusprog");
     //вставить гиперссылку
 }
 
