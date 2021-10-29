@@ -139,7 +139,6 @@
      <string>файл</string>
     </property>
     <addaction name="open"/>
-    <addaction name="save"/>
     <addaction name="saveHow"/>
     <addaction name="create"/>
     <addaction name="info"/>
@@ -152,14 +151,6 @@
     <string>Открыть план</string>
    </property>
   </action>
-  <action name="save">
-   <property name="text">
-    <string>Сохранить</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
-   </property>
-  </action>
   <action name="create">
    <property name="text">
     <string>Создать новый план</string>
@@ -169,10 +160,16 @@
    <property name="text">
     <string>Версия программы</string>
    </property>
+   <property name="shortcut">
+    <string>`</string>
+   </property>
   </action>
   <action name="saveHow">
    <property name="text">
     <string>Сохранить как</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

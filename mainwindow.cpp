@@ -44,7 +44,7 @@ void MainWindow::on_open_triggered()
                               QString::fromUtf8("Сохранить файл " + nameOfFile.toUtf8() + " ?" ),
                               QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         if (reply == QMessageBox::Yes)
-            on_save_triggered();
+            on_saveHow_triggered();
         else if (reply == QMessageBox::No)
         {
 
@@ -93,28 +93,6 @@ void MainWindow::on_open_triggered()
     printTasks(true);
 }
 
-void MainWindow::on_save_triggered()
-{
-    change = false;
-
-    QTextStream out(stdout);
-    QFile file(nameOfFile);
-
-    if (file.open(QIODevice::WriteOnly)) {
-        QTextStream out(&file); // поток записываемых данных направляем в файл
-
-        for(int i = 0;i<tasks.size(); i++)
-        {
-            out<<tasks[i].getItemString()<<Qt::endl;
-        }
-
-        ui->fileName->setText(nameOfFile);
-
-    } else {
-        qWarning("Could not open file");
-      }
-      file.close();
-}
 
 void MainWindow::on_create_triggered()
 {
@@ -188,6 +166,14 @@ void MainWindow::on_info_triggered()
 
 void MainWindow::on_addEvent_clicked()
 {
+    for(int i = 0;i<tasks.size();i++)
+    {
+        if(tasks[i].getDate() == ui->calendarWidget->selectedDate())
+        {
+            return;
+        }
+    }
+
     bool ok;
     QString text = QInputDialog::getText(this,
                                  QString::fromUtf8("Введите задачу"),
