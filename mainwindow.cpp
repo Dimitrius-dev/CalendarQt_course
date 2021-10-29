@@ -93,7 +93,6 @@ void MainWindow::on_open_triggered()
     printTasks(true);
 }
 
-
 void MainWindow::on_create_triggered()
 {
     if(change)
