@@ -58,8 +58,8 @@ private:
 
     QTextCharFormat colorSelected, colorUnSelected, colorHighlight;
 
-    QList<taskitem>::iterator iterList;
-    QList<taskitem> tasks;
+    QList<Taskitem>::iterator iterList;
+    QList<Taskitem> tasks;
 
     bool change = false;
 };

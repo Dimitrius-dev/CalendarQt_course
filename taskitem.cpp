@@ -1,18 +1,18 @@
 #include "taskitem.h"
 #include "QDebug"
 
-taskitem::taskitem(QString name, QDate date)
+Taskitem::Taskitem(QString name, QDate date)
 {
     this->name = name;
     this->date = date;
 }
 
-QString taskitem::getItemString()
+QString Taskitem::getItemString()
 {
     return QString::number(date.day()) + ":" + QString::number(date.month()) + ":" +  QString::number(date.year()) + ":" + " " + name;
 }
 
-taskitem::taskitem(QString line)
+Taskitem::Taskitem(QString line)
 {
     int el[3];
     int iter = 0;
@@ -38,7 +38,7 @@ taskitem::taskitem(QString line)
     }
 }
 
-QDate taskitem::getDate()
+QDate Taskitem::getDate()
 {
     return  date;
 }

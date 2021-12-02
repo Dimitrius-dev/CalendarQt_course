@@ -3,7 +3,6 @@
 #include "QDebug"
 
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -27,7 +26,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 void MainWindow::on_calendarWidget_clicked()
 {
@@ -81,7 +79,7 @@ void MainWindow::on_open_triggered()
     while (!in.atEnd())
     {
         QString line = in.readLine();
-        tasks.append(taskitem(line));
+        tasks.append(Taskitem(line));
         //out << line << endl;
     }
     file.close();
@@ -182,14 +180,13 @@ void MainWindow::on_addEvent_clicked()
     if (ok && !text.isEmpty())
     {
         ui->calendarWidget->setDateTextFormat(ui->calendarWidget->selectedDate(),colorSelected);
-        tasks.append(taskitem(text, ui->calendarWidget->selectedDate()));
+        tasks.append(Taskitem(text, ui->calendarWidget->selectedDate()));
         printTasks(false);
     }
 }
 
 void MainWindow::on_deleteEvent_clicked()
 {
-
     for (iterList = tasks.begin(); iterList != tasks.end(); iterList++)
     {
         if(iterList->getDate() == ui->calendarWidget->selectedDate())
@@ -217,6 +214,7 @@ void MainWindow::on_saveHow_triggered()
                                 QString::fromUtf8("Сохранить файл"),
                                 QDir::currentPath(),
                                 "Documents (*.txt);;All files (*.*)");
+
     if(fileName.isEmpty())
     {
         return;
@@ -228,7 +226,7 @@ void MainWindow::on_saveHow_triggered()
 
     QTextStream out(stdout);
 
-    QFile file(nameOfFile);
+    QFile file(fileName);
 
     // Открываем файл в режиме "Только для записи"
     if (file.open(QIODevice::WriteOnly)) {

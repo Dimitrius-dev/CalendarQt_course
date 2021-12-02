@@ -4,18 +4,13 @@
 #include "QString"
 #include "QDate"
 
-class taskitem
+class Taskitem
 {
 public:
-    taskitem(QString name, QDate date);
-
-    taskitem(QString line);
-
+    Taskitem(QString name, QDate date);
+    Taskitem(QString line);
     QDate getDate();
-
     QString getItemString();
-
-
 
 private:
     QString name;
