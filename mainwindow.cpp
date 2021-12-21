@@ -246,6 +246,9 @@ void MainWindow::on_saveHow_triggered()
 
 void MainWindow::clearAll()
 {
+    nameOfFile = "Безымянный";
+    ui->fileName->setText(nameOfFile);
+
     for(int i = 0;i < tasks.size();i++)//подсвечиваем даты
     {
         ui->calendarWidget->setDateTextFormat(tasks[i].getDate(),colorUnSelected);
